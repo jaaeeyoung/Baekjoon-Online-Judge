@@ -57,6 +57,10 @@ Log
 ===================================================================================================================================
 ' 2022-02-22-TUE : 문제 파악
                    틀렸습니다. -> 맞는 것 같은데 어디서 틀린건지 모르겠음
+' 2022-02-23-WED : BFS로 구현해도 틀림
+                   컴퓨터간의 연결을 리스트에 저장할 때 단방향으로만 적어서 틀린거였음
+                   -> 양방향으로 고쳐 맞음
+                   문제 해결
 ===================================================================================================================================
 '''
 
@@ -71,6 +75,8 @@ for i in range(N+1):
 for _ in range(M):
     i, j = map(int, input().split())
     graph[i].append(j)
+    if i not in graph[j]:
+          graph[j].append(i)
 
 def dfs(n):
     # 현재 컴퓨터 방문 처리
@@ -80,7 +86,35 @@ def dfs(n):
         if not visited[i]:
             dfs(i)
 
-dfs(1)
+# dfs(1)
+
+# count = -1
+# for i in visited: # 방문한 노드 수 세기
+#     if i:
+#         count += 1
+# print(count)
+
+# BFS
+from collections import deque
+
+def bfs(start):
+      queue = deque([start])
+      
+      
+      while queue:
+            now = queue.popleft()
+            # 현재 컴퓨터 방문 처리
+            visited[now] = True
+            # print('now:', now)
+            # print('visited:', visited)
+            
+            # 해당 노드의 인접 노드 중 방문하지 않은 노드를 모두 Queue에 삽입하고 방문처리
+            for i in graph[now]:
+                  if not visited[i]:
+                        queue.append(i)
+
+bfs(1)
+
 count = -1
 for i in visited: # 방문한 노드 수 세기
     if i:
