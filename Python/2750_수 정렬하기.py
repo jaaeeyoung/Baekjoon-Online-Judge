@@ -49,6 +49,8 @@ Log
 2022-02-11-FRI : 문제 파악
                  런타임 에러 (IndexError)
 2022-02-12-SAT : 문제 해결
+2022-02-27-SUN : 더 나은 방법으로 수정
+                 -> 매번 최솟값을 찾아 출력하는 것이 아닌 애초에 sort()로 정렬하고 하나씩 출력하는 방식
 ===================================================================================================================================
 '''
 
@@ -59,8 +61,12 @@ nums = []
 for i in range(N):
     nums.append(int(input()))
     
-for i in range(N):
-    # nums에서 최솟값 출력 후
-    print(min(nums))
-    # 출력한 값 삭제
-    nums.remove(min(nums))
+# for i in range(N):
+#     # nums에서 최솟값 출력 후
+#     print(min(nums))
+#     # 출력한 값 삭제
+#     nums.remove(min(nums))
+
+nums.sort()
+for i in nums:
+    print(i)
