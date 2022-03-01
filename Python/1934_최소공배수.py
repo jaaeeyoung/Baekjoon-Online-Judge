@@ -49,6 +49,8 @@ Log
                    틀림 - 어느 부분이 틀렸는지 모르겠음
                    [11653] 소인수분해와 동일한 알고리즘을 사용했기 때문에 인수분해 이후 최소공배수 구하는 과정에서 잘못된 것 같음
                    틀린 건 고쳤지만 시간 초과 -> 유클리드 호제법 사용해봐야할듯
+' 2022-03-01 TUE : 유클리드 호제법 적용
+                   문제 해결
 ===================================================================================================================================
 '''
 
@@ -58,71 +60,28 @@ Algorithm
 2. A와 B의 각 인수의 최솟값을 구하고 모든 인수 곱해서 최소 공배수 출력
 '''
 
+# 유클리드 호제법
+# A와 B의 최대 공약수 = B와 A%B의 최대 공약수
+def euclid(num1, num2):
+    A = max(num1, num2)
+    B = min(num1, num2)
+    R = A % B
+    # A와 B가 나누어 떨어지면 B RETURN
+    if R == 0:
+        return B
+    else: # 나누어 떨어지지 않으면 재귀
+        return euclid(B, R)
+    
 T = int(input())
 answer = []
 for i in range(T):
     A, B = map(int, input().split())
     
-    if A == 1 or B == 1 or A % B == 0 or B % A == 0: # 둘 중 하나의 값이 1이면 또는 서로 나누어 지는 수라면 나머지 하나의 값 출력하고 다음 테스트케이스 확인
-        answer.append(max(A, B))
+    # A와 B가 서로 배수관계라면 둘 중 큰 수 출력
+    if A % B == 0 or B % A == 0:
+        print(max(A, B))
         continue
     
-    # A 인수분해
-    j = 2
-    A_factor = {} # A의 인수의 빈도를 담을 Dictionary
-    while True:
-        if A % j == 0: # A가 j로 나누어 떨어지면 Dictionary에 추가
-            if j not in A_factor:
-                A_factor[j] = 1
-            else:
-                A_factor[j] += 1
-                
-            A //= j # 몫 구하기
-        else: # 나누어 떨어지지 않으면 다음 숫자로 나눔
-            j += 1
-            
-        if A == 1: # 몫이 1이 되면 break
-                break
-    
-    # B 인수분해   
-    j = 2
-    B_factor = {} # B의 인수의 빈도를 담을 Dictionary
-    while True:
-        if B % j == 0: # B가 j로 나누어 떨어지면 Dictionary에 추가
-            if j not in B_factor:
-                B_factor[j] = 1
-            else:
-                B_factor[j] += 1
-                
-            B //= j # 몫 구하기
-        else: # 나누어 떨어지지 않으면 다음 숫자로 나눔
-            j += 1
-            
-        if B == 1: # 몫이 1이 되면 break
-                break
-
-    # print(A_factor)
-    # print(B_factor)
-    cum_mul = 1
-    for key, value in A_factor.items():
-        if key in B_factor: # A의 Key가 B에도 존재하면
-            # 둘 중 최솟값 구해 누적 곱
-            for j in range(value):
-                    cum_mul *= key
-            if value < B_factor[key]: # B의 인수 빈도가 높으면
-                B_factor[key] -= min(value, B_factor[key]) # 누적곱 한 횟수만큼 B의 해당 인수 빈도 감소
-            else: # A의 인수 빈도가 높으면
-                del B_factor[key] # B에서 해당 인수 삭제
-        else: # 존재하지 않으면
-            for j in range(value):
-                cum_mul *= key
-    
-    # B에만 남은 인수의 곱까지 누적
-    for key, value in B_factor.items():
-        for j in range(value):
-            cum_mul *= key
-                
-    answer.append(cum_mul)
-    
-for i in answer:
-    print(i)
+    # 배수관계가 아니라면 EUCLID 호제법 이용
+    # 최소공배수 = A*B//최대공약수
+    print((A * B)//euclid(A, B))
