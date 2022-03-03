@@ -63,35 +63,34 @@ Log
 '''
 Algorithm
 1. 시간을 Tuple로 짝지어서 List로 만듦
-2. Tuple의 앞 원소를 기준으로 오름차순 정렬
-3. for문 돌면서 Tuple의 뒷 원소보다 앞 원소가 큰 Tuple 찾기
--> count 증가
-4. While 문 돌면서 answer의 max값보다 I의 길이가 길면 break
-5. While 문 모두 돌면 answer 중 max값 찾아 출력
+2. 회의 시간(tuple[1] - tuple[0])을 기준으로 정렬
+  2.1. 시간이 동일하면 시작 시간을 기준으로 정렬
+  2.2. 시작 시간이 동일하면 끝나는 시간을 기준으로 정렬
+3. for문 돌면서 새로운 리스트에 이미 차지한 시간은 True, 아직 비어있는 시간은 False로 설정
+  3.1. check[시작시간:끝나는 시간+1]에 True가 없을 때만 그 시간에 회의 가능
 '''
 
+# 입력
 N = int(input())
 I = []
 for _ in range(N):
     I.append(tuple(map(int, input().split())))
-    
-# Tuple 앞 원소 기준으로 오름차순 정렬
-I.sort()
 
-answer = []
-while True:
-    now_end = 0 # 현재 미팅의 끝나는 시각
-    count = 0 # 가능한 회의의 개수 담을 변수
-    
-    # 뒷 원소보다 앞 원소보다 큰 Tuple 찾기
-    for i, j in I:
-        if i >= now_end:
-            now_end = j
+# 회의 시간, 시작 시간, 끝나는 시간 순서대로 기준을 잡아 정렬
+I.sort(key = lambda x: (x[1] - x[0], x[0], x[1]))
+
+# 이미 차지한 시간은 True, 아직 비어있는 시간은 False로 설정
+check = [False] * (max(max(I)) + 1) # 시간표
+count = 0 # 사용 할 수 있는 회의 개수
+for start, end in I:
+    # 현재 시간 중에 사용 가능하면 그 시간 차지하고 check에 저장
+    if start == end:
+        if not check[start]:
+            check[start] = True
             count += 1
-    answer.append(count)
+    elif True not in check[start:end]:
+        for i in range(start, end):
+            check[i] = True
+            count += 1
 
-    I = I[1:] # 첫 번째 Tuple 삭제
-    if len(I) < max(answer):
-        break
-
-print(max(answer))
+print(count)
