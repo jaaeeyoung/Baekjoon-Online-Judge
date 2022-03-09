@@ -17,72 +17,59 @@ Log
                    Algorithm을 빼는 것이 아닌 나누는 것으로 변경
                    15% 틀렸습니다.
                    문제 해결
+' 2022-03-10-THU : Code 최적화
 ===================================================================================================================================
 '''
-
 '''
-1. 이진 탐색 - 재귀 이용
-2. 한 사람 당 나누어주는 보석의 최대 개수를 mid로 보고 mid의 최솟값 갱신
+Algorithm
+이진 탐색 - 반복  
+mid : 한 사람이 최대로 받을 수 있는 보석 개수 (질투심)
+for문 안에서의 조건 
+➝  보석의 개수 // mid : 보석을 받는 학생 수
+➝  보석의 개수 % mid : 남는 보석 수 
+➝  보석을 mid로 나눴을 때 나머지가 없으면 학생수 = 보석의 개수 // mid
+➝  보석을 mid로 나눴을 때 나머지가 있으면 학생수 = 보석의 개수 // mid + 1
+mid 값 갱신의 조건 
+➝ 보석을 받은 학생 수가 N명보다 많으면 나누어주는 보석의 개수 증가
+➝ 보석을 받은 학생 수가 N명보다 적으면 나누어주는 보석의 개수 최솟값 갱신
 '''
 
 import sys
 input = sys.stdin.readline
 
-# 이진 탐색 함수
-def binary_search(start, end):
-    global answer
-    
-    # 찾는 값이 없으면 None 반환
-    if start > end:
-        return None
-    
-    mid = (start + end) // 2
-    
-    # mid 값이 0이면 None 반환
-    if mid == 0:
-        return None
-    
-    # N 명의 학생에게 보석을 mid 개씩 나누어주기
-    jewel_index = 0
-    jewel = amount[0]
-    student = 0
-    flag = False # 가능하면 False, 불가능하면 True
-    while student <= N:
-
-        # 보석 나눠주기
-        student += jewel // mid
-        if jewel % mid > 0:
-            student += 1
-            jewel = 0
-
-        # 모두 나누었을 때 학생 수가 N보다 커지면(보석이 남는 경우) 나가기
-        if student > N:
-            flag = True
-            break
-        
-        # 보석 색상 index 증가
-        jewel_index += 1
-        # index가 보석 색상 리스트를 넘어가지 않으면
-        if jewel_index < M:
-            # jewel 값 갱신
-            jewel = amount[jewel_index]
-        else: # 넘어가면 break
-            break
-    
-    if flag: # 보석이 남으면 더 많이씩 나누어줘야함
-        return binary_search(mid + 1, end)
-    else: # 가능한 경우 최솟값 찾기
-        if answer > mid:
-            answer = mid
-        return binary_search(start, mid - 1)
-        
-        
 # 입력
 N, M = map(int, input().split())
-amount = []
+gems = []
 for _ in range(M):
-    amount.append(int(input()))
+    gems.append(int(input()))
 
-answer = max(amount)
-binary_search(1, max(amount))
+# start, end 초기화
+start = 1
+end = sum(gems)
+
+# 이진 탐색
+answer = 0
+while start <= end:
+    
+    mid = (start + end) // 2
+
+    # mid가 0이면 break
+    if mid == 0:
+        break
+    
+    num_student = 0
+    for num_gem in gems:
+        
+        if num_gem % mid > 0:
+            num_student += num_gem // mid + 1
+        else:
+            num_student += num_gem // mid
+
+    # 보석을 받은 학생의 수가 N명 보다 많으면 mid값 증가시켜 재탐색
+    if num_student > N:
+        start = mid + 1
+    else: # 보석을 받은 학생 수가 N명보다 적으면 mid값 감소시켜 재탐색
+        end = mid - 1
+        answer = mid
+        
 print(answer)
