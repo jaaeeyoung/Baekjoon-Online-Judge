@@ -10,46 +10,52 @@ Log
                    틀렸습니다.
 ===================================================================================================================================
 '''
-
 '''
-1. 이진 탐색 - 재귀 이용
-2. mid를 블루레이 크기로 두고 mid를 넘는 순간 다음 index에 동영상 저장
+Algorithm
+이진 탐색 - 반복문
+mid : Blueray의 크기
+1. for문 돌면서 강의의 길이를 누적합
+1.1. for문 index : 강의
+2. 누적합이 mid를 넘어가면 blueray index 증가하고 누적합 현재 강의 길이로 초기화
+3. blueray index가 M개를 넘어가면 mid 증가시켜 다시 탐색
+4. blueray index가 M개를 넘어가지 않으면 mid값의 최솟값 갱신
+
 '''
 
 import sys
 input = sys.stdin.readline
 
-# 이진 탐색 함수
-def binary_search(start, end):
-    global answer
-    
-    # 찾는 값이 없으면 None Return
-    if start > end:
-        return None
-    
-    mid = (start + end) // 2
-    
-    # 강의를 하나씩 더하면서 mid를 넘으면 다음 강의부터는 다음 blueray에 저장
-    blueray = [0]
-    for i in range(len(length)):
-
-        blueray[-1] += length[i]
-        # 현재 Blueray의 값이 mid를 넘으면 다음 Blueray로 index 변경
-        if blueray[-1] >= mid and i != len(length) - 1:
-            blueray.append(0)
-            
-    # 들어가지 않은 동영상이 있으면 mid 값 높여 다시 탐색
-    if len(blueray) > M:
-        return binary_search(mid + 1, end)
-    else: # 정상적이라면 mid 최솟값 갱신
-        if answer > max(blueray):
-            answer = max(blueray)
-        return binary_search(start, mid - 1)
-        
 # 입력
 N, M = map(int, input().split())
 length = list(map(int, input().split()))
 
-answer = sum(length)
-binary_search(1, answer)
+# start, end 초기화
+start = max(length)
+end = sum(length)
+
+# 이진 탐색
+answer = 0
+while start <= end:
+    
+    mid = (start + end) // 2
+    sum_ = 0
+    blueray_index = 0
+    for now in length:
+        
+        # 누적합이 mid를 넘어가는지 확인
+        if sum_ + now > mid:
+            # blueray index 증가
+            blueray_index += 1
+            # 누적합 현재 0으로 초기화
+            sum_ = 0
+        
+        sum_ += now
+    
+    # blueray index가 M보다 많아지면 mid 증가시켜 다시 탐색
+    if blueray_index > M - 1:
+        start = mid + 1
+    else: # 정상적이라면 mid 감소시켜 최솟값 찾기
+        end = mid - 1
+        answer = mid
+
 print(answer)
