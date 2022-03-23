@@ -60,6 +60,8 @@ Log
 ===================================================================================================================================
 ' 2022-03-01-TUE : 문제 파악
                    문제 해결
+' 2022-03-23-WED : N이나 M이 1이하가 되는 경우 재귀 깊이에 문제가 발생해 아예 정해진 수(10^9)로 설정
+                   문제 해결
 ===================================================================================================================================
 '''
 import sys
@@ -69,7 +71,7 @@ input = sys.stdin.readline
 def dfs(start):
 
     # 현재 Node가 이미 방문한 Node라면 False Return
-    if visited[start] == True:
+    if visited[start]:
         return False
     
     # 현재 Node 방문 처리
@@ -86,7 +88,7 @@ def dfs(start):
     
 # 입력
 N, M = map(int, input().split())
-sys.setrecursionlimit(N*M)
+sys.setrecursionlimit(10**9)
 graph = [[] for _ in range(N+1)]
 visited = [False] * (N+1)
 
