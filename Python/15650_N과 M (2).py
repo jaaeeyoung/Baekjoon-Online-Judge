@@ -22,12 +22,10 @@ itertools 사용
 3. 각 원소들이 오름차순으로 정렬되어있는 순열만 answer에 저장해 출력
 
 백트래킹 사용
-1. 1부터 N까지의 숫자를 리스트에 하나씩 넣음
-    ☞ 리스트에 i가 이미 들어있거나 리스트의 마지막 값보다 i가 작으면 무시
-2. 리스트의 길이가 M이 되면 answer에 추가하고 리스트의 마지막 원소 확인
-2.1. 리스트 마지막 원소가 N이 아니면 pop()한 번 하고 다음 index의 값 넣기
-2.2. 리스트 마지막 원소가 N이면 끝에서부터 연속으로 작아지는 숫자의 개수만큼 pop하고 마지막 원소를 다음 index로 설정
-3. answer 출력
+1. stack이 비어있는지 확인
+1.1. stack 비어있으면 stack에 num 추가하고 재귀함수 호출 후 재귀함수 return되면 pop
+1.2. stack 비어있지 않으면 stack에 없는 값 중 stack의 마지막 숫자보다 큰 수 append하고 재귀함수 호출 후 재귀함수 return되면 pop
+2. stack의 길이가 M과 같으면 stack print
 '''
 
 from itertools import permutations
@@ -44,58 +42,37 @@ def use_permutations(N, M):
             answer_in_func.append(i)
     return answer_in_func
 
+def back_tracking():
+    
+    # stack의 길이가 M이면 print
+    if len(stack) == M:
+        print(' '.join(list(map(str, stack))))
+    else:
+        for num in range(1, N+1):
+            # stack이 비어있으면
+            if not stack:
+                # stack에 num 추가
+                stack.append(num)
+                # 재귀함수 호출
+                back_tracking()
+                # 재귀함수 return되면 pop
+                stack.pop()
+            # 스택이 비어있지 않으면
+            # num이 stack에 없고 num이 stack의 마지막 숫자보다 크면
+            elif num not in stack and num > stack[-1]:
+                # stack에 num 추가
+                stack.append(num)
+                # 재귀함수 호출
+                back_tracking()
+                # 재귀함수 return되면 pop
+                stack.pop()
+                
 N, M = map(int, input().split())
-answer = []
-temp = []
-i = 1
-while i < N+1:
-    # i가 이미 temp에 들어있는 숫자보다 작으면 continue
-    if temp and i < temp[-1]:
-        i += 1
-        continue
-    
-    # i가 이미 temp에 들어있으면 continue
-    if i in temp:
-        i += 1
-        continue
-    temp.append(i)
-        
-    # 수열의 길이가 M이 되면 break
-    if len(temp) == M:
-        answer.append(temp[:])
-        
-        # 마지막 원소가 마지막 숫자였다면
-        if temp and temp[-1] == N:
-            
-            for j in range(N, 0, -1):
-                # j를 마지막 원소로 설정
-                i = temp[-1]
-                # temp를 마지막 숫자부터 연속으로 들어있는 개수만큼 pop
-                if temp and temp[-1] == j:
-                    temp.pop()
-                    if not temp:
-                        break
-                else:
-                    break
-            # temp가 비어있으면 break
-            if not temp:
-                break
-            else: # 비어있지 않으면 temp의 마지막 원소를 i로 설정
-                i = temp[-1]
-                temp.pop()
+stack = []
+back_tracking()
 
-        else:
-            temp.pop()
-    
-    i += 1
-
-for i in answer:
-    for j in range(M):
-        print(i[j], end = ' ')
-    print()
-
-answer = use_permutations(N, M)
-for i in answer:
-    for j in range(M):
-        print(i[j], end = ' ')
-    print()
+# answer = use_permutations(N, M)
+# for i in answer:
+#     for j in range(M):
+#         print(i[j], end = ' ')
+#     print()
