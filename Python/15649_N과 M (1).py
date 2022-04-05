@@ -8,22 +8,41 @@ Log
 ===================================================================================================================================
 ' 2022-04-04-MON : 문제 파악
                    문제 해결
+' 2022-04-05 TUE : 코드 최적화 (back tracking 이용)
 ===================================================================================================================================
 '''
 '''
 Algorithm
+itertools 라이브러리 이용
 1. itertools 라이브러리의 permutation() 이용해 1부터 N까지의 숫자 중 M개 선택해 모두 리스트에 저장
 2. 리스트 오름차순 정렬 후 print
+
+back tracking - 재귀 이용
+1. stack에 들어있지 않은 숫자를 추가하고 재귀함수 호출
+2. 재귀함수가 반환되면 pop
+3. stack의 길이가 M이 되면 print
 '''
 from itertools import permutations
 N, M = map(int, input().split())
 
-# 1부터 N까지의 숫자 중 M개를 선택하는 순열 리스트로 저장
-nums = list(permutations(range(1, N+1), M))
-# 리스트 오름차순 정렬
-nums.sort()
-# 출력
-for i in nums:
-    for j in i:
-        print(j, end = ' ')
-    print()
+# # 1부터 N까지의 숫자 중 M개를 선택하는 순열 리스트로 저장
+# nums = list(permutations(range(1, N+1), M))
+# # 리스트 오름차순 정렬
+# nums.sort()
+
+def back_tracking():
+    
+    # stack의 길이가 M이 되면 출력
+    if len(stack) == M:
+        print(' '. join(list(map(str, stack))))
+    else:
+        for num in range(1, N+1):
+            # num이 stack에 없으면
+            if num not in stack:
+                # stack에 추가하고 재귀
+                stack.append(num)
+                back_tracking()
+                # 재귀함수 반환되면 pop
+                stack.pop()
+stack = []
+back_tracking()
