@@ -50,13 +50,19 @@ Log
 ===================================================================================================================================
 '''
 
-max_ = 0
-index = 0
-for i in range(9):
-    num = int(input())
-    if max_ < num:
-        max_ = num
-        index = i
+# max_ = 0
+# index = 0
+# for i in range(9):
+#     num = int(input())
+#     if max_ < num:
+#         max_ = num
+#         index = i
 
-print(max_)
-print(index+1)
+# print(max_)
+# print(index+1)
+nums = []
+for i in range(1, 10):
+    nums.append((int(input()), i))
+# nums 오름차순 정렬
+nums.sort()
+print('\n'.join(list(map(str, nums[-1]))))
