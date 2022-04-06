@@ -9,19 +9,25 @@ Log
 ' 2022-02-15-TUE : 문제 파악
                    시간 초과
 ' 2022-03-04-FRI : 알고리즘 다시 짜야될 듯
+' 2022-04-07 THU : 백트래킹을 이용한 알고리즘으로 구현
+                   시간 초과
+                   그리디로 구현
+                   문제 해결
 ===================================================================================================================================
 '''
 
 '''
 Algorithm
-1. 시간을 Tuple로 짝지어서 List로 만듦
-2. 회의 시간(tuple[1] - tuple[0])을 기준으로 정렬
-  2.1. 시간이 동일하면 시작 시간을 기준으로 정렬
-  2.2. 시작 시간이 동일하면 끝나는 시간을 기준으로 정렬
-3. for문 돌면서 새로운 리스트에 이미 차지한 시간은 True, 아직 비어있는 시간은 False로 설정
-  3.1. check[시작시간:끝나는 시간+1]에 True가 없을 때만 그 시간에 회의 가능
+그리디
+1. 리스트로 입력받아 끝나는 시간을 기준으로 오름차순 정렬
+2. stack에 첫 번째 회의 추가
+3. stack의 마지막 회의의 끝나는 시간보다 시작 시간이 크거나 같은 회의만 추가
+4. stack의 길이 출력
 '''
 
+import sys
+input = sys.stdin.readline
+    
 # 입력
 N = int(input())
 I = []
@@ -29,57 +35,11 @@ for _ in range(N):
     I.append(tuple(map(int, input().split())))
     
 # 시작 시간, 회의 시간 순서대로 기준을 잡아 정렬
-I.sort(key = lambda x: (x[0], x[1] - x[0]))
+I.sort(key = lambda x: (x[1], x[0]))
 
-# 이미 차지한 시간은 True, 아직 비어있는 시간은 False로 설정
-check = [False] * (max(max(I)) + 1) # 시간표
-count = 0 # 사용할 수 있는 회의 개수
-for start, end in I:
-    # 현재 시간 중에 사용 가능하면 그 시간 차지하고 check에 저장
-    if True not in check[start:end]:
-        # 시작 시간과 끝나는 시간이 같은 경우
-        if start == end:
-            count += 1
-        else: # 시작 시간과 끝나는 시간이 다른 경우
-            if True not in check[start:end]:
-                for i in range(start, end):
-                    check[i] = True
-                    count += 1
-                    
-print(count)
-
-# 시작 시간이 같으면 다음 index 값 삭제
-# i = 1
-# while True:
-#     if I[i-1] == I[i]:
-#         del I[i]
-#         i -= 1
-#     i += 1
-    
-#     if i == len(I)-1:
-#         break
-
-# answer = [[] for _ in range(len(I))]
-# last_end = 0
-# index = 0
-# while True:
-
-#     # 리스트 하나씩 보면서 사용가능한 회의 시간 모두 append
-#     for start, end in I:
-#         if start >= last_end:
-#             answer[index].append((start, end))
-#             last_end = end
-
-#     index += 1
-#     last_end = 0
-        
-#     if len(I) == 1:
-#         break
-#     I = I[1:]
-
-# # answer에서 길이가 가장 긴 것 찾기
-# max_ = 0
-# for i in answer:
-#     if len(i) > max_:
-#         max_ = len(i)
-# print(max_)
+# 회의 시작 시간이 이전 회의 끝나는 시간보다 크거나 같으면 추가
+stack = [I[0]]
+for index in range(1, N):
+    if I[index][0] >= stack[-1][1]:
+        stack.append(I[index])
+print(len(stack))
