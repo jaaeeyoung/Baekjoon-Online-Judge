@@ -17,7 +17,7 @@ Algorithm
 Greedy 이용
 1. 각 로프의 중량을 리스트에 담아 sort
 2. 1개 쓸 때부터 N개 쓸 때까지의 최댓값 구하기
-    -> 각 최댓값은 [N-i] * i
+    ☞ 각 최댓값은 [N-i] * i
 '''
 
 import sys
