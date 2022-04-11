@@ -19,12 +19,12 @@ Back Tracking 이용
 2.2. stack이 비어있지 않으면 stack의 마지막 숫자보다 큰 숫자 append
 3. 재귀함수 호출
 4. 재귀함수 return되면 stack pop
-5. stack의 길이가 K와 같아지면 print
+5. stack의 길이가 6이 되면 print
 '''
 
 def back_tracking():
     
-    # stack의 길이가 K와 같아지면 print
+    # stack의 길이가 6이 되면 print
     if len(stack) == 6:
         print(' '.join(list(map(str, stack))))
     else:
