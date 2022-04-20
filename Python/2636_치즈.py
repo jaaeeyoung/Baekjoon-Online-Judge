@@ -10,6 +10,7 @@ Log
                    런타임 에러(Recursion Error)
 ' 2022-04-16 SAT : 문제 해결
                    코드가 너무 지저분해 최적화해보기
+' 2022-04-20 WED : 코드 최적화
 ===================================================================================================================================
 '''
 '''
@@ -50,28 +51,26 @@ input = sys.stdin.readline
 N, M = map(int, input().split())
 sys.setrecursionlimit(N*M)
 graph = []
+count_cheezes = 0 # 치즈가 녹기 전 치즈조각이 놓여 있는 칸의 개수
 for _ in range(N):
     graph.append(list(map(int, input().split())))
+    count_cheezes += graph[-1].count(1)
 
 num = 0
 while True:
+
     # 구멍의 값을 H로 변경
-    replace_value = 0
     visited = [[False for _ in range(M)] for _ in range(N)]
     for x in range(N):
         for y in range(M):
             # x, y가 0, 0이 아니면 replace 값 H로 설정
             if x > 0 and y > 0:
-                replace_value = 'H'
-            dfs(x, y, replace_value)
-        
-    # 치즈가 녹기 전 치즈조각이 놓여 있는 칸의 개수
-    # count_cheezes = graph.count(1)
-    count_cheezes = 0
-    for x in range(N):
-        count_cheezes += graph[x].count(1)
-        
+                dfs(x, y, 'H')
+            else:
+                dfs(x, y, 0)
+
     # 가장자리에 있는 1을 C로 변경
+    count_c = 0
     for x in range(N):
         for y in range(M):
             if graph[x][y] == 1:
@@ -86,21 +85,19 @@ while True:
                     # nx, ny가 0이면 x, y를 C로 변경하고 break
                     if graph[nx][ny] == 0:
                         graph[x][y] = 'C'
+                        count_c += 1
                         break
     
-    # C인 칸 모두 삭제, H인 칸 모두 0으로 변경, 1인 칸 모두 세기
-    counts = 0
+    # 현재 1인 칸과 없어질 칸의 차가 0이면 break
+    if count_cheezes - count_c == 0:
+        print(num+1)
+        print(count_cheezes)
+        break
+    
+    # C, H인 칸 모두 0으로 변경
     for x in range(N):
         for y in range(M):
-            if graph[x][y] == 'C':
+            if graph[x][y] == 'C'or graph[x][y] == 'H':
                 graph[x][y] = 0
-            if graph[x][y] == 'H':
-                graph[x][y] = 0
-            if graph[x][y] == 1:
-                counts += 1
-                
-    if counts == 0:
-        break
     num += 1
-print(num+1)
-print(count_cheezes)
+    count_cheezes -= count_c
