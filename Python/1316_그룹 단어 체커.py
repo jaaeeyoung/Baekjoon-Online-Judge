@@ -35,8 +35,7 @@ for _ in range(N):
         if word[index] in check:
             flag = False
             break
-        elif index == len(word)-1:
-            flag = True
+
         check.append(word[index])
     
     # flag가 True인 경우 그룹 단어
