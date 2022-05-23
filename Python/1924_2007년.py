@@ -12,7 +12,7 @@ Log
 '''
 '''
 Algorithm
-입출력
+구현
 '''
 
 x, y = map(int, input().split())
