@@ -15,6 +15,5 @@ Algorithm
 for문 돌면서 * 찍기
 '''
 
-N = int(input())
-for i in range(1, N+1):
+for i in range(1, int(input())+1):
     print('*'*i)
