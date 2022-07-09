@@ -9,12 +9,22 @@ Log
 ' 2022-06-13-MON : 문제 파악
                    7% 틀렸습니다.
                    15% 틀렸습니다.
+' 2022-07-09 SAT : 46% 틀렸습니다.
+                   FOR문에 들어가는 점화식 손봐야할듯
+                   6
+                   123
+                   14
+                   3
+                   2
+                   13
+                   4
+                   위의 test case 검사해보기 (answer : 143)
 ===================================================================================================================================
 '''
 
 '''
 DP
-dp[idx] = max(dp[idx-2]+arr[idx], dp[idx-1])
+dp[idx] = max(dp[idx-2]+arr[idx], dp[idx-3]+arr[idx-1]+arr[idx])
 '''
 
 import sys
@@ -35,8 +45,6 @@ if N > 2:
     dp[3] = max(arr[1]+arr[3], dp[2])
 
 for idx in range(4, N+1):
-    # dp[idx] = max(dp[idx-3]+arr[idx-1] + arr[idx], dp[idx-2] + arr[idx], dp[idx-1])
-    # dp[idx] = max(dp[idx-3]+arr[idx-1]+arr[idx], dp[idx-3]+arr[idx-2]+arr[idx])
-    dp[idx] = max(dp[idx-3]+arr[idx-1]+arr[idx], dp[idx-2]+arr[idx])
+    dp[idx] = max(dp[idx-2], dp[idx-3]+arr[idx-1]) + arr[idx]
     print(dp)
-print(max(dp))
+print(max(dp[-1], dp[-2]))
